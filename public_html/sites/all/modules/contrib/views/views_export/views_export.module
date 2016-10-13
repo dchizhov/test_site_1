@@ -1,0 +1,16 @@
+<?php
+    function articles_by_admin_views_api() {
+        return array(
+            'api' => '3.0',
+        );
+    }
+
+    function articles_by_admin_views_default_views () {
+        $path = './'.drupal_get_path('module','articles_by_admin').'/views/*.inc';
+        $views = array();
+        foreach (glob($path) as $views_filename){
+            require_once ($views_filename);
+        }
+
+        return $views;
+    }
