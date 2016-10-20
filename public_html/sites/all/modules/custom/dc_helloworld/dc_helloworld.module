@@ -9,65 +9,65 @@
  * Implement hook_menu().
  */
 function dc_helloworld_menu() {
-    $items['helloworld'] = array(
-        'title' => 'Hello world',
-        'description' => 'description',
-        'page callback' => '_dc_helloworld_get_message_hw',
-        'page arguments' => array(0),
-        'type' => MENU_NORMAL_ITEM,
-        'access callback' => TRUE,
-    );
+ $items['helloworld'] = array(
+  'title' => 'Hello world',
+  'description' => 'description',
+  'page callback' => '_dc_helloworld_get_message_hw',
+  'page arguments' => array(0),
+  'type' => MENU_NORMAL_ITEM,
+  'access callback' => TRUE,
+ );
 
-    $items['helloworld/tab1'] = array(
-        'title' => 'Hello world Tab',
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-        'access callback' => TRUE,
-        'weight' => -10,
-    );
+ $items['helloworld/tab1'] = array(
+  'title' => 'Hello world Tab',
+  'type' => MENU_DEFAULT_LOCAL_TASK,
+  'access callback' => TRUE,
+  'weight' => -10,
+ );
 
-    $items['helloworld/tab2'] = array(
-        'title' => 'Bye World Tab',
-        'page callback' => '_dc_helloworld_get_message_hw',
-        'page arguments' => array(1),
-        'type' => MENU_LOCAL_TASK,
-        'access callback' => TRUE,
-    );
+ $items['helloworld/tab2'] = array(
+  'title' => 'Bye World Tab',
+  'page callback' => '_dc_helloworld_get_message_hw',
+  'page arguments' => array(1),
+  'type' => MENU_LOCAL_TASK,
+  'access callback' => TRUE,
+ );
 
-    $items['helloworld/tab3'] = array(
-        'title' => 'Hello World Block',
-        'page callback' => '_dc_hellworld_get_hello_world_block',
-        'type' => MENU_LOCAL_TASK,
-        'access callback' => TRUE,
-    );
+ $items['helloworld/tab3'] = array(
+  'title' => 'Hello World Block',
+  'page callback' => '_dc_hellworld_get_hello_world_block',
+  'type' => MENU_LOCAL_TASK,
+  'access callback' => TRUE,
+ );
 
-    return $items;
+ return $items;
 }
 
 /**
  * Implement hook_block_info().
  */
 function dc_helloworld_block_info() {
-    $block = array();
-    $block['hello_world_block'] = array(
-        'info' => t('Hello world block!'),
-    );
+ $block = array();
+ $block['hello_world_block'] = array(
+  'info' => t('Hello world block!'),
+ );
 
-    return $block;
+ return $block;
 }
 
 /**
  * Implement hook_block_view().
  */
 function dc_helloworld_block_view($delta = '') {
-    $block = array();
+ $block = array();
 
-    switch ($delta) {
-        case 'hello_world_block':
-            $block['content'] = _dc_hellworld_get_message_hw_for_block();
-            break;
-    }
+ switch ($delta) {
+  case 'hello_world_block':
+   $block['content'] = _dc_hellworld_get_message_hw_for_block();
+   break;
+ }
 
-    return $block;
+ return $block;
 }
 
 /**
@@ -76,13 +76,13 @@ function dc_helloworld_block_view($delta = '') {
  */
 
 function _dc_helloworld_get_message_hw($arg = 0) {
-    $message = 'Hello world';
-    
-    if ($arg == 'tab2') {
-        $message = 'Bye World!';
-    }
+ $message = 'Hello world';
 
-    return $message;
+ if ($arg == 'tab2') {
+  $message = 'Bye World!';
+ }
+
+ return $message;
 }
 
 /**
@@ -90,15 +90,15 @@ function _dc_helloworld_get_message_hw($arg = 0) {
  */
 
 function _dc_hellworld_get_message_hw_for_block() {
-    $message = 'Hello World Block!';
-    return $message;
+ $message = 'Hello World Block!';
+ return $message;
 }
 
 /**
  * @return string
  */
 
-function _dc_hellworld_get_hello_world_block(){
-    $block = module_invoke('dc_helloworld','block_view','hello_world_block');
-    return render($block['content']);
+function _dc_hellworld_get_hello_world_block() {
+ $block = module_invoke('dc_helloworld', 'block_view', 'hello_world_block');
+ return render($block['content']);
 }
