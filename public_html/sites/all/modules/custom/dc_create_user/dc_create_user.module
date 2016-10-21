@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Create User after to click button
+ * Create User after click button
  */
 
 /**
@@ -25,11 +25,26 @@ function dc_create_user_menu() {
  * Implements hook_form().
  */
 function dc_create_user_form($form, &$form_state) {
- $form['name'] = array(
+ $form['login'] = array(
   '#type' => 'textfield',
-  '#title' => 'Name :',
-  '#size' => 10,
+  '#title' => 'Login :',
+  '#size' => 30,
   '#maxlenght' => 10,
+  '#required' => TRUE,
+ );
+
+ $form['email'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Email: ',
+  '#size' => 30,
+  '#maxlenght' => 30,
+  '#required' => TRUE,
+ );
+
+ $form['password'] = array(
+  '#type' => 'password_confirm',
+  '#size' => 30,
+  '#required' => TRUE,
  );
 
  $form['createuser'] = array(
@@ -46,7 +61,11 @@ function dc_create_user_form($form, &$form_state) {
 
 function dc_create_user_form_submit($form, &$form_state) {
  $edit = array(
-  'name' => $form_state['values']['name'],
+  'name' => $form_state['values']['login'],
+  'pass' => $form_state['values']['password'],
+  'mail' => $form_state['values']['email'],
+  'init' => $form_state['values']['email'],
+  'status' => 1,
  );
 
  user_save(drupal_anonymous_user(), $edit);

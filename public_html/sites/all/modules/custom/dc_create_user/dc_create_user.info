@@ -1,4 +1,4 @@
 name = Create User
-description = Create User after to click button
+description = Create User after click button
 core = 7.x
 package = Custom
