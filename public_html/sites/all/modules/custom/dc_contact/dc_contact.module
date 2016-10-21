@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * @file
+ * Show simple form
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_contact_menu() {
+ $items['helloworld/contact'] = array(
+  'title' => 'Contact Form',
+  'description' => 'description',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_contact_form'),
+  'type' => MENU_LOCAL_TASK,
+  'access callback' => TRUE,
+ );
+
+ return $items;
+}
+
+/**
+ *
+ */
+function dc_contact_form($form, &$form_state) {
+ $form['name'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Name?',
+  '#size' => 10,
+  '#maxlenght' => 10,
+  '#weight' => -10,
+  '#requiered' => TRUE,
+ );
+
+ $form['second_name'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Second Name',
+  '#size' => 10,
+  '#maxlenght' => 10,
+  '#weight' => -7,
+ );
+
+ $form['message'] = array(
+  '#type' => 'textarea',
+  '#title' => 'Your message',
+  '#maxlenght' => 200,
+  '#weight' => -5,
+ );
+
+ $form['submit_buttom'] = array(
+  '#type' => 'submit',
+  '#value' => t('Click Here!'),
+ );
+
+ return $form;
+}
+
+/**
+ *
+ */
+function dc_contact_form_validate($form, &$form_state) {
+ if (empty($form_state['values']['name'])) {
+  form_set_error('price', t('Insert name'));
+ }
+
+ if (strlen($form_state['values']['name']) < 5) {
+  form_set_error('price', t('Name min 5 letters'));
+ }
+
+ if (empty($form_state['values']['message'])) {
+  form_set_error('price', t('Insert message'));
+ }
+}
+
+/**
+ *
+ */
+function dc_contact_form_submit($form, &$form_state) {
+ watchdog("title", $form_state['values']['name']);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function dc_contact_form_alter(&$form, &$form_state, $form_id) {
+ if ($form_id == 'dc_contact_form') {
+  $form['newfield'] = array(
+   '#type' => 'textfield',
+   '#title' => 'New Field',
+   '#size' => 15,
+   '#maxlenght' => 20,
+   '#weight' => -1,
+  );
+ }
+}

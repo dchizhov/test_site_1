@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Create User after click button
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_create_user_menu() {
+ $items['helloworld/createuser'] = array(
+  'title' => 'Create User',
+  'description' => 'Create User',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_create_user_form'),
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function dc_create_user_form($form, &$form_state) {
+ $form['login'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Login :',
+  '#size' => 30,
+  '#maxlenght' => 10,
+  '#required' => TRUE,
+ );
+
+ $form['email'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Email: ',
+  '#size' => 30,
+  '#maxlenght' => 30,
+  '#required' => TRUE,
+ );
+
+ $form['password'] = array(
+  '#type' => 'password_confirm',
+  '#size' => 30,
+  '#required' => TRUE,
+ );
+
+ $form['createuser'] = array(
+  '#type' => 'submit',
+  '#value' => 'Create User',
+ );
+
+ return $form;
+}
+
+/**
+ * Save user
+ */
+
+function dc_create_user_form_submit($form, &$form_state) {
+ $edit = array(
+  'name' => $form_state['values']['login'],
+  'pass' => $form_state['values']['password'],
+  'mail' => $form_state['values']['email'],
+  'init' => $form_state['values']['email'],
+  'status' => 1,
+ );
+
+ user_save(drupal_anonymous_user(), $edit);
+}

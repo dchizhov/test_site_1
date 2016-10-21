@@ -1,0 +1,4 @@
+name = Hello World!
+description = Show message 'Hello World!'
+core = 7.x
+package = Custom
