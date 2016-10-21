@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function dc_create_user_menu() {
+ $items['helloworld/createuser'] = array(
+  'title' => 'Create User',
+  'description' => 'Create User',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_create_user_form'),
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function dc_create_user_form($form, &$form_state) {
+ $form['name'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Name :',
+  '#size' => 10,
+  '#maxlenght' => 10,
+ );
+
+ $form['createuser'] = array(
+  '#type' => 'submit',
+  '#value' => 'Create User',
+ );
+
+ return $form;
+}
+
+function dc_create_user_form_submit($form, &$form_state) {
+ $edit = array(
+  'name' => $form_state['values']['name'],
+ );
+
+ user_save(drupal_anonymous_user(), $edit);
+}
