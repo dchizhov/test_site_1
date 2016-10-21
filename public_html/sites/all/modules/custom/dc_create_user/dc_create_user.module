@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Create User after to click button
+ */
+
+/**
  * Implements hook_menu().
  */
 function dc_create_user_menu() {
@@ -34,6 +39,10 @@ function dc_create_user_form($form, &$form_state) {
 
  return $form;
 }
+
+/**
+ * Save user
+ */
 
 function dc_create_user_form_submit($form, &$form_state) {
  $edit = array(
