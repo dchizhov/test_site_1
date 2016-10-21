@@ -1,0 +1,4 @@
+name = Places
+description = Show dropdown lists with countries and cities
+core = 7.x
+package = Custom

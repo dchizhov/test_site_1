@@ -1,0 +1,80 @@
+<?php
+define('COUNTRIES_VOCABULARY', 5);
+define('CITIES_VOCABULARY', 6);
+
+/**
+ * @file
+ * Show dropdown lists with countries and cities
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_places_menu() {
+ $items['helloworld/places'] = array(
+  'title' => 'Places',
+  'description' => 'desc',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_places_form'),
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function dc_places_form($form,
+ &$form_state) {
+ $form['countries'] = array(
+  '#type' => 'select',
+  '#title' => t('Countries: '),
+  '#options' => _dc_places_get_countries(),
+ );
+
+ $form['cities'] = array(
+  '#type' => 'select',
+  '#title' => t('Cities: '),
+  '#options' => _dc_places_get_cities(),
+ );
+
+ return $form;
+}
+
+/**
+ * @return array list of country
+ */
+function _dc_places_get_countries() {
+ $query = db_select('taxonomy_term_data', 't')
+  ->fields('t', array('tid', 'name',))
+  ->condition('vid', COUNTRIES_VOCABULARY);
+ $result = $query->execute()
+  ->fetchAll();
+
+ $countries = array();
+ foreach ($result as $value) {
+  $countries[$value->tid] = $value->name;
+ }
+
+ return $countries;
+}
+
+/**
+ * @return array list of cities
+ */
+function _dc_places_get_cities() {
+ $query = db_select('taxonomy_term_data', 't')
+  ->fields('t', array('tid', 'name',))
+  ->condition('t.vid', CITIES_VOCABULARY);
+ $result = $query->execute()
+  ->fetchAll();
+
+ $cities = array();
+ foreach ($result as $value) {
+  $cities[$value->tid] = $value->name;
+ }
+
+ return $cities;
+}
