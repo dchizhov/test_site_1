@@ -1,0 +1,99 @@
+<?php
+define('DC_PLACES_COUNTRIES_VID', 5);
+define('DC_PLACES_CITIES_VID', 6);
+
+/**
+ * @file
+ * Show dropdown lists with countries and cities
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_places_menu() {
+ $items['helloworld/places'] = array(
+  'title' => 'Places',
+  'description' => 'desc',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_places_form'),
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function dc_places_form($form, &$form_state) {
+ $optionsCountries = _dc_places_get_countries();
+
+ $selected = key($optionsCountries);
+ if (isset($form_state['values']['countries'])){
+  $selected = $form_state['values']['countries'];
+ }
+
+ $form['countries'] = array(
+  '#type' => 'select',
+  '#title' => 'Countries:',
+  '#options' => $optionsCountries,
+  '#ajax' => array(
+   'callback' => '_dc_places_load_form_cities',
+   'wrapper' => 'cities',
+  ),
+ );
+
+ $form['cities'] = array(
+  '#type' => 'select',
+  '#title' => 'Cities:',
+  '#prefix' => '<div id="cities">',
+  '#suffix' => '</div>',
+  '#options' => _dc_places_get_cities($selected),
+ );
+
+ return $form;
+}
+
+/**
+ * @return array list of country
+ */
+function _dc_places_get_countries() {
+ $query = db_select('taxonomy_term_data', 't')
+  ->fields('t', array('tid', 'name',))
+  ->condition('vid', VID_COUNTRIES);
+ $result = $query->execute()
+  ->fetchAll();
+
+ $countries = array();
+ foreach ($result as $value) {
+  $countries[$value->tid] = $value->name;
+ }
+
+ return $countries;
+}
+
+/**
+ * @return array list of cities
+ */
+function _dc_places_get_cities($field_country_target_id) {
+ $query = db_select('taxonomy_term_data', 'ttd');
+ $query->innerJoin('field_data_field_country', 'fdfc', 'fdfc.entity_id = ttd.tid');
+ $query->fields('ttd', array('tid', 'name'))
+  ->condition('ttd.vid', VID_CITIES)
+  ->condition('fdfc.field_country_target_id', $field_country_target_id);
+ $result = $query->execute()
+  ->fetchAll();
+ $cities = array();
+ foreach ($result as $value) {
+  $cities[$value->tid] = $value->name;
+ }
+ return $cities;
+}
+
+/**
+ *
+ */
+function _dc_places_load_form_cities($form, &$form_state) {
+ return $form['cities'];
+}
