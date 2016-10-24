@@ -91,6 +91,9 @@ function _dc_places_get_cities($field_country_target_id) {
  return $cities;
 }
 
-function form_ajax_load_form_cities($form, &$form_state) {
+/**
+ *
+ */
+function _dc_places_load_form_cities($form, &$form_state) {
  return $form['cities'];
 }
