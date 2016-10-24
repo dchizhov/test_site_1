@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Show nodes
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_show_nodes_menu() {
+ $items['helloworld/shownodes'] = array(
+  'title' => 'Nodes',
+  'description' => 'desc',
+  'page callback' => '_dc_show_nodes_get_show_nodes_block',
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function dc_show_nodes_block_info() {
+ $block = array();
+
+ $block['show_nodes_block'] = array(
+  'info' => t('Show Nodes!'),
+ );
+
+ return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function dc_show_nodes_block_view($delta = '') {
+ $block = array();
+
+ switch ($delta) {
+  case 'show_nodes_block':
+   $nodes = _dc_show_nodes_get_nodes_for_nodes_block();
+
+   foreach ($nodes as $key => $node) {
+    $list[] = $node->title . '<div>' . format_date($node->created) . '</div>';
+   }
+
+   $list = array();
+   $theme_args = array('items' => $list, 'type' => 'ol');
+   $content = theme('item_list', $theme_args);
+
+   $block = array(
+    'subject' => t('Show Nodes Block'),
+    'content' => $content,
+   );
+
+   break;
+ }
+
+ return $block;
+}
+
+/**
+ *
+ */
+function _dc_show_nodes_get_show_nodes_block() {
+ $block = module_invoke('dc_show_nodes', 'block_view', 'show_nodes_block');
+ return render($block['content']);
+}
+
+/**
+ *
+ */
+function _dc_show_nodes_get_nodes_for_nodes_block() {
+ $query = db_select('node', 'n');
+
+ $query->fields('n')
+  ->range(0, 5)
+  ->orderBy('nid', 'DESC');
+
+ $result = $query->execute()
+  ->fetchAll();
+
+ return $result;
+}
