@@ -1,6 +1,6 @@
 <?php
-define('VID_COUNTRIES', 5);
-define('VID_CITIES', 6);
+define('DC_PLACES_COUNTRIES_VID', 5);
+define('DC_PLACES_CITIES_VID', 6);
 
 /**
  * @file
@@ -39,7 +39,7 @@ function dc_places_form($form, &$form_state) {
   '#title' => 'Countries:',
   '#options' => $optionsCountries,
   '#ajax' => array(
-   'callback' => 'form_ajax_load_form_cities',
+   'callback' => '_dc_places_load_form_cities',
    'wrapper' => 'cities',
   ),
  );
