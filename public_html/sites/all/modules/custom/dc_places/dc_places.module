@@ -20,6 +20,24 @@ function dc_places_menu() {
   'type' => MENU_LOCAL_TASK,
  );
 
+ $items['admin/config/places'] = array(
+  'title' => 'Places configuration',
+  'description' => 'Configure for places module',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('dc_places_admin_settings'),
+  'file' => 'dc_places.admin.inc',
+  'access callback' => TRUE,
+  'weight' => 0,
+ );
+
+ $items['helloworld/showsettings'] = array(
+  'title' => 'Show settings',
+  'description' => 'desc',
+  'page callback' => '_dc_places_get_setting_block',
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
  return $items;
 }
 
@@ -56,12 +74,39 @@ function dc_places_form($form, &$form_state) {
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function dc_places_block_info() {
+ $block = array();
+ $block['show_setting'] = array(
+  'info' => t('Show settings!'),
+ );
+
+ return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function dc_places_block_view($delta = '') {
+ $block = array();
+
+ switch ($delta){
+  case 'show_setting':
+    $block['content'] = 'First Setting: '.variable_get('setting_first').'<br>Second Setting: '.variable_get('setting_second');
+   break;
+ }
+
+ return $block;
+}
+
+/**
  * @return array list of country
  */
 function _dc_places_get_countries() {
  $query = db_select('taxonomy_term_data', 't')
   ->fields('t', array('tid', 'name',))
-  ->condition('vid', VID_COUNTRIES);
+  ->condition('vid', DC_PLACES_COUNTRIES_VID);
  $result = $query->execute()
   ->fetchAll();
 
@@ -80,7 +125,7 @@ function _dc_places_get_cities($field_country_target_id) {
  $query = db_select('taxonomy_term_data', 'ttd');
  $query->innerJoin('field_data_field_country', 'fdfc', 'fdfc.entity_id = ttd.tid');
  $query->fields('ttd', array('tid', 'name'))
-  ->condition('ttd.vid', VID_CITIES)
+  ->condition('ttd.vid', DC_PLACES_CITIES_VID)
   ->condition('fdfc.field_country_target_id', $field_country_target_id);
  $result = $query->execute()
   ->fetchAll();
@@ -88,6 +133,7 @@ function _dc_places_get_cities($field_country_target_id) {
  foreach ($result as $value) {
   $cities[$value->tid] = $value->name;
  }
+ 
  return $cities;
 }
 
@@ -96,4 +142,13 @@ function _dc_places_get_cities($field_country_target_id) {
  */
 function _dc_places_load_form_cities($form, &$form_state) {
  return $form['cities'];
+}
+
+/**
+ * 
+ */
+function _dc_places_get_setting_block() {
+ $block = module_invoke('dc_places', 'block_view', 'show_setting');
+ 
+ return render($block['content']);
 }

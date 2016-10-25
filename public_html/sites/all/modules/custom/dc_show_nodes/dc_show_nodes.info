@@ -1,0 +1,4 @@
+name = Show Nodes
+description = Show Nodes
+core = 7.x
+package = Custom
