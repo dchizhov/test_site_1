@@ -1,5 +1,5 @@
 <?php
-
+define('DC_SHOW_NODES_SECOND_URL_ARGUMENT', 2);
 /**
  * @file
  * Show nodes
@@ -31,6 +31,30 @@ function dc_show_nodes_menu() {
   'type' => MENU_LOCAL_TASK,
  );
 
+ $items['helloworld/shownodesbycount'] = array(
+  'title' => 'Nodes by Count',
+  'description' => 'desc',
+  'page callback' => '_dc_show_nodes_get_show_nodes_block_by_count',
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ $items['helloworld/shownode'] = array(
+  'title' => 'Nodes by Count Page',
+  'description' => 'desc',
+  'page callback' => '_dc_show_nodes_get_nodes',
+  'access callback' => TRUE,
+  'type' => MENU_LOCAL_TASK,
+ );
+
+ $items['helloworld/shownode/%'] = array(
+  'title' => 'Nodes by Count Page',
+  'description' => 'desc',
+  'page callback' => '_dc_show_nodes_get_nodes',
+  'page arguments' => array(2),
+  'access callback' => TRUE,
+ );
+
  return $items;
 }
 
@@ -42,6 +66,10 @@ function dc_show_nodes_block_info() {
 
  $block['show_nodes_block'] = array(
   'info' => t('Show Nodes!'),
+ );
+
+ $block['show_nodes_block_by_count'] = array(
+  'info' => t('Show Nodes by count')
  );
 
  return $block;
@@ -65,37 +93,97 @@ function dc_show_nodes_block_view($delta = '') {
     'content' => $content,
    );
    break;
+
+  case 'show_nodes_block_by_count':
+   $arg = arg(DC_SHOW_NODES_SECOND_URL_ARGUMENT);
+
+   if (isset($arg)) {
+    $nidList = _dc_show_nodes_get_nodes_for_nodes_block_by_count($arg);
+   }
+   else {
+    $nidList = _dc_show_nodes_get_nodes_for_nodes_block_by_count();
+   }
+
+   $nodes = node_load_multiple($nidList);
+   $content = theme('dc_custom_template', array('data' => $nodes));
+
+   $block = array(
+    'subject' => t('Show Nodes Block'),
+    'content' => $content,
+   );
+   break;
  }
 
  return $block;
 }
 
 /**
- *
+ * Return HTML content from block 'show_nodes_block'
  */
 function _dc_show_nodes_get_show_nodes_block() {
  $block = module_invoke('dc_show_nodes', 'block_view', 'show_nodes_block');
- 
+
  return render($block['content']);
 }
 
 /**
- *
+ * Return HTML content from block 'show_nodes_block_by_count'
+ */
+function _dc_show_nodes_get_show_nodes_block_by_count() {
+ $block = module_invoke('dc_show_nodes', 'block_view', 'show_nodes_block_by_count');
+
+ return render($block['content']);
+}
+
+/**
+ * Query to database. Return Node ID List with type Article.
  */
 function _dc_show_nodes_get_nodes_for_nodes_block() {
  $query = db_select('node', 'n');
 
  $query->fields('n', array('nid'))
   ->condition('n.type', 'article')
-  ->range(0, 5)
   ->orderBy('nid', 'DESC');
 
  $result = $query->execute()
   ->fetchAll();
 
+ $nidList = array();
  foreach ($result as $value) {
   $nidList[] = $value->nid;
  }
- 
+
  return $nidList;
+}
+
+/**
+ * Query to database. Return Node ID List with type Article. Param is count of nodes.
+ */
+function _dc_show_nodes_get_nodes_for_nodes_block_by_count($count = 1) {
+ $query = db_select('node', 'n');
+
+ $query->fields('n', array('nid'))
+  ->condition('n.type', 'article')
+  ->range(0, $count)
+  ->orderBy('nid', 'DESC');
+
+ $result = $query->execute()
+  ->fetchAll();
+
+ $nidList = array();
+ foreach ($result as $value) {
+  $nidList[] = $value->nid;
+ }
+
+ return $nidList;
+}
+
+/**
+ * Return Nodes. Count of nodes depends on argument of URL
+ */
+function _dc_show_nodes_get_nodes($count = 1) {
+ $nidList = _dc_show_nodes_get_nodes_for_nodes_block_by_count($count);
+ $nodes = node_load_multiple($nidList);
+ $content = theme('dc_custom_template', array('data' => $nodes));
+ return $content;
 }

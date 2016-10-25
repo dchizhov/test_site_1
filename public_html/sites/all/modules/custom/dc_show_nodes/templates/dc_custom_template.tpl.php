@@ -1,10 +1,15 @@
 <?php
-
-foreach ($data as $value):?>
+if (isset($data)):
+    foreach ($data as $value): ?>
+        <div>
+            <?php echo $value->title ?>
+        </div>
+        <div>
+            <?php echo format_date($value->created) ?>
+        </div>
+    <?php endforeach;
+else: ?>
     <div>
-        <?= $value->title ?>
+        Nodes missing
     </div>
-    <div>
-        <?= format_date($value->created) ?>
-    </div>
-<?php endforeach; ?>
+<?php endif; ?>
