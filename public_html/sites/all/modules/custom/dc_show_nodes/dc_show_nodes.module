@@ -43,11 +43,12 @@ function dc_show_nodes_block_view($delta = '') {
   case 'show_nodes_block':
    $nodes = _dc_show_nodes_get_nodes_for_nodes_block();
 
+   $list = array();
+
    foreach ($nodes as $key => $node) {
     $list[] = $node->title . '<div>' . format_date($node->created) . '</div>';
    }
 
-   $list = array();
    $theme_args = array('items' => $list, 'type' => 'ol');
    $content = theme('item_list', $theme_args);
 
@@ -55,7 +56,6 @@ function dc_show_nodes_block_view($delta = '') {
     'subject' => t('Show Nodes Block'),
     'content' => $content,
    );
-
    break;
  }
 
