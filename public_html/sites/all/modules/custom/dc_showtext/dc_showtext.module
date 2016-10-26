@@ -1,0 +1,47 @@
+<?php
+/**
+ * @file
+ * Show text for users depending of role
+ */
+define('DC_SHOWTEXT_RID_ADMINISTRATOR', 3);
+define('DC_SHOWTEXT_RID_MANAGER', 5);
+
+/**
+ * Implements hook_menu().
+ */
+function dc_showtext_menu() {
+ $items = array();
+
+ $items['check_credentials'] = array(
+  'title' => 'Show Text',
+  'description' => 'desc',
+  'page callback' => '_dc_showtext_get_time',
+  'access callback' => '_dc_showtext_user_access',
+  'weight' => -100,
+ );
+
+ return $items;
+}
+
+/**
+ * Return current date and time. Format: MM/DD/YYYY - HH:MM
+ */
+function _dc_showtext_get_time() {
+ return format_date(REQUEST_TIME);
+}
+
+/**
+ * Check user role and current time(minute), after get permissions for view page.
+ */
+function _dc_showtext_user_access() {
+ $minute = format_date(REQUEST_TIME, 'custom', 'i');
+
+ if (($minute % 2 == 0) && user_has_role(DC_SHOWTEXT_RID_MANAGER)) {
+  return TRUE;
+ }
+ else if (($minute % 2 !== 0) && user_has_role(DC_SHOWTEXT_RID_ADMINISTRATOR)) {
+  return TRUE;
+ }
+
+ return FALSE;
+}
