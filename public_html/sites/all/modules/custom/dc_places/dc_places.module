@@ -1,11 +1,12 @@
 <?php
-define('DC_PLACES_COUNTRIES_VID', 5);
-define('DC_PLACES_CITIES_VID', 6);
-
 /**
  * @file
  * Show dropdown lists with countries and cities
  */
+
+define('DC_PLACES_COUNTRIES_VID', 5);
+define('DC_PLACES_CITIES_VID', 6);
+
 
 /**
  * Implements hook_menu().
