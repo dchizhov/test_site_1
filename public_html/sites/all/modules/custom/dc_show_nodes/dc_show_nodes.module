@@ -1,9 +1,10 @@
 <?php
-define('DC_SHOW_NODES_SECOND_URL_ARGUMENT', 2);
 /**
  * @file
  * Show nodes
  */
+
+define('DC_SHOW_NODES_SECOND_URL_ARGUMENT', 2);
 
 /**
  * Implements hook_theme().
@@ -185,5 +186,6 @@ function _dc_show_nodes_get_nodes($count = 1) {
  $nidList = _dc_show_nodes_get_nodes_for_nodes_block_by_count($count);
  $nodes = node_load_multiple($nidList);
  $content = theme('dc_custom_template', array('data' => $nodes));
+
  return $content;
 }
