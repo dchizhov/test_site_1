@@ -1,0 +1,4 @@
+name = Show Text Module!
+description = Show text for users depending of role
+core = 7.x
+package = Custom
