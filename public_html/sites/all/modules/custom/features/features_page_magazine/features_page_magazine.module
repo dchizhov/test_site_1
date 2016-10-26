@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Features page magazine feature.
+ */
+
+include_once 'features_page_magazine.features.inc';
