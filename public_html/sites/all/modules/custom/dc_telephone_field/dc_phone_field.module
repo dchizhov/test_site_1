@@ -8,13 +8,20 @@
  * Implements hook_form_alter().
  */
 function dc_phone_field_form_alter(&$form, &$form_state, $form_id) {
+ $defaultValue = '';
+ if (isset($form['nid']['#value'])) {
+  $defaultValue = _dc_phone_field_get_default_value_for_phone_field($form['nid']['#value']);
+ }
+
  $form['phone_field'] = array(
   '#type' => 'textfield',
   '#title' => 'Phone: ',
   '#maxlenght' => 20,
   '#size' => 15,
   '#weight' => -10,
+  '#default_value' => $defaultValue,
  );
+
 }
 
 /**
@@ -48,4 +55,21 @@ function dc_phone_field_node_delete($node) {
  db_delete('sample_table')
   ->condition('nid', $node->nid)
   ->execute();
+}
+
+/**
+ *
+ */
+function _dc_phone_field_get_default_value_for_phone_field($nid) {
+ $defaultValue = db_select('sample_table', 'st')
+  ->fields('st', array('value'))
+  ->condition('st.nid', $nid)
+  ->execute()
+  ->fetch();
+
+ if (empty($defaultValue)) {
+  return FALSE;
+ }
+
+ return $defaultValue->value;
 }
