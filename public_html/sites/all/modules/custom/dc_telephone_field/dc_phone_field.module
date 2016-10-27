@@ -33,12 +33,12 @@ function dc_phone_field_node_insert($node) {
  * Implements hook_node_update().
  */
 function dc_phone_field_node_update($node) {
- dpm(db_update('sample_table')
+ db_update('sample_table')
   ->fields(array(
    'value' => $node->phone_field,
   ))
   ->condition('nid', $node->nid)
-  ->execute());
+  ->execute();
 }
 
 /**
