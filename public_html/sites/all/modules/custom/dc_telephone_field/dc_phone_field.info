@@ -1,0 +1,4 @@
+name = Phone Field
+description = Add a simple field 'Phone'
+core = 7.x
+package = Custom
