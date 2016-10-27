@@ -1,0 +1,35 @@
+<?php
+/**
+ * @file
+ * Create table 'sample_table' for dc_phone_fild module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function dc_phone_field_schema() {
+ $schema['sample_table'] = array(
+  'description' => 'description',
+  'fields' => array(
+   'nid' => array(
+    'type' => 'int',
+    'not null' => TRUE,
+   ),
+   'value' => array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => ' ',
+   ),
+  ),
+ );
+
+ return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function dc_phone_field_install() {
+ drupal_install_schema('sample_table');
+}

@@ -16,3 +16,36 @@ function dc_phone_field_form_alter(&$form, &$form_state, $form_id) {
   '#weight' => -10,
  );
 }
+
+/**
+ * Implements hook_node_insert().
+ */
+function dc_phone_field_node_insert($node) {
+ db_insert('sample_table')
+  ->fields(array(
+   'nid' => $node->nid,
+   'value' => $node->phone_field,
+  ))
+  ->execute();
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function dc_phone_field_node_update($node) {
+ dpm(db_update('sample_table')
+  ->fields(array(
+   'value' => $node->phone_field,
+  ))
+  ->condition('nid', $node->nid)
+  ->execute());
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function dc_phone_field_node_delete($node) {
+ db_delete('sample_table')
+  ->condition('nid', $node->nid)
+  ->execute();
+}
