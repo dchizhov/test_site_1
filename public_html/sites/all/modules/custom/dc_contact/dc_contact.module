@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Show simple form
@@ -25,6 +24,8 @@ function dc_contact_menu() {
  *
  */
 function dc_contact_form($form, &$form_state) {
+ drupal_add_js(drupal_get_path('module', 'dc_contact') . '/dc_contact_ajax.js');
+
  $form['name'] = array(
   '#type' => 'textfield',
   '#title' => 'Name?',
@@ -52,6 +53,9 @@ function dc_contact_form($form, &$form_state) {
  $form['submit_buttom'] = array(
   '#type' => 'submit',
   '#value' => t('Click Here!'),
+  '#ajax' => array(
+   'callback' => '_dc_contact_write_down_in_watch_dog',
+  ),
  );
 
  return $form;
@@ -93,5 +97,27 @@ function dc_contact_form_alter(&$form, &$form_state, $form_id) {
    '#maxlenght' => 20,
    '#weight' => -1,
   );
+ }
+}
+
+/**
+ * Write down in watch dog contact information if data validate.
+ * If data do not validate show errors messages
+ */
+function _dc_contact_write_down_in_watch_dog($form, &$form_state) {
+ if (!form_get_errors()) {
+  watchdog("title", $form_state['values']['name']);
+  $commands = array();
+  $commands[] = ajax_command_alert('wrote down in watch dog!');
+  $commands[] = array('command' => 'dc_contact_reset_form');
+  unset($_SESSION['messages']);
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+ }
+ else {
+  $commands = array();
+  $commands[] = array('command' => 'dc_contact_add_errors_block', 'errors' => form_get_errors());
+  
+  return array('#type' => 'ajax', '#commands' => $commands);
  }
 }
