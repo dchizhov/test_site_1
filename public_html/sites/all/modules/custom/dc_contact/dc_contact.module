@@ -110,14 +110,14 @@ function _dc_contact_write_down_in_watch_dog($form, &$form_state) {
   $commands = array();
   $commands[] = ajax_command_alert('wrote down in watch dog!');
   $commands[] = array('command' => 'dc_contact_reset_form');
-  unset($_SESSION['messages']);
+  drupal_get_messages();
 
   return array('#type' => 'ajax', '#commands' => $commands);
  }
  else {
   $commands = array();
   $commands[] = array('command' => 'dc_contact_add_errors_block', 'errors' => form_get_errors());
-  
+
   return array('#type' => 'ajax', '#commands' => $commands);
  }
 }

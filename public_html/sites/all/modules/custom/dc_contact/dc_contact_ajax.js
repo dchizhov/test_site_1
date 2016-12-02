@@ -8,7 +8,5 @@
         $('#messages').remove();
 
         $('<div id="messages"><div class="section clearfix"><div class="messages error"> <h2 class="element-invisible">Error Message</h2>' + response.errors.price + '</div></div></div>').insertAfter($('#header'));
-        console.log(response.errors.price);
     };
-
 }(jQuery));
