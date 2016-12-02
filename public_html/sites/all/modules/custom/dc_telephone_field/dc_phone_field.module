@@ -58,7 +58,7 @@ function dc_phone_field_node_delete($node) {
 }
 
 /**
- *
+ * Return value depending on nid from sample_table
  */
 function _dc_phone_field_get_default_value_for_phone_field($nid) {
  $defaultValue = db_select('sample_table', 'st')
