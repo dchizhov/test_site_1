@@ -7,6 +7,11 @@
     Drupal.ajax.prototype.commands.dc_contact_add_errors_block = function (ajax, response, status) {
         $('#messages').remove();
 
-        $('<div id="messages"><div class="section clearfix"><div class="messages error"> <h2 class="element-invisible">Error Message</h2>' + response.errors.price + '</div></div></div>').insertAfter($('#header'));
+        var messagesBlock = '<div id="messages"><div class="section clearfix"><div class="messages error"><h2 class="element-invisible">Error message</h2><ul id="errors"></ul></div></div></div>';
+        $(messagesBlock).insertAfter($('#header'));
+
+        $.each(response.errors, function (index, element) {
+            $('#errors').append('<li>' + element + '</li>');
+        });
     };
 }(jQuery));

@@ -66,15 +66,15 @@ function dc_contact_form($form, &$form_state) {
  */
 function dc_contact_form_validate($form, &$form_state) {
  if (empty($form_state['values']['name'])) {
-  form_set_error('price', t('Insert name'));
+  form_set_error('name', t('Insert name'));
  }
 
  if (strlen($form_state['values']['name']) < 5) {
-  form_set_error('price', t('Name min 5 letters'));
+  form_set_error('name', t('Name min 5 letters'));
  }
 
  if (empty($form_state['values']['message'])) {
-  form_set_error('price', t('Insert message'));
+  form_set_error('message', t('Insert message'));
  }
 }
 
@@ -105,19 +105,18 @@ function dc_contact_form_alter(&$form, &$form_state, $form_id) {
  * If data do not validate show errors messages
  */
 function _dc_contact_write_down_in_watch_dog($form, &$form_state) {
+ $commands = array();
+
  if (!form_get_errors()) {
-  watchdog("title", $form_state['values']['name']);
-  $commands = array();
   $commands[] = ajax_command_alert('wrote down in watch dog!');
   $commands[] = array('command' => 'dc_contact_reset_form');
-  drupal_get_messages();
-
-  return array('#type' => 'ajax', '#commands' => $commands);
+  
+  watchdog("title", $form_state['values']['name']);
  }
  else {
-  $commands = array();
   $commands[] = array('command' => 'dc_contact_add_errors_block', 'errors' => form_get_errors());
-
-  return array('#type' => 'ajax', '#commands' => $commands);
  }
+ drupal_get_messages();
+
+ return array('#type' => 'ajax', '#commands' => $commands);
 }
