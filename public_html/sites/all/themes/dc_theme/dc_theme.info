@@ -1,0 +1,15 @@
+name = dc_theme
+description = Description of dc_theme
+core = 7.x
+engine = phptemplate
+
+stylesheets[all][] = style.css
+stylesheets[all][] = layout.css
+
+regions[left] = Left sidebar
+regions[right] = Right sidebar
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+
+plugins[panels][layouts] = layouts
