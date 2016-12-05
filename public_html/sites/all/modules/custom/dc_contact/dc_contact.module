@@ -101,6 +101,15 @@ function dc_contact_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function dc_contact_ctools_plugin_directory($owner, $plugin_type) {
+ if ($owner == 'ctools' && $plugin_type == 'content_types') {
+  return 'plugins/content_type';
+ }
+}
+
+/**
  * Write down in watch dog contact information if data validate.
  * If data do not validate show errors messages
  */
@@ -110,7 +119,7 @@ function _dc_contact_write_down_in_watch_dog($form, &$form_state) {
  if (!form_get_errors()) {
   $commands[] = ajax_command_alert('wrote down in watch dog!');
   $commands[] = array('command' => 'dc_contact_reset_form');
-  
+
   watchdog("title", $form_state['values']['name']);
  }
  else {
