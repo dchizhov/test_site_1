@@ -104,8 +104,12 @@ function dc_contact_form_alter(&$form, &$form_state, $form_id) {
  * Implements hook_ctools_plugin_directory().
  */
 function dc_contact_ctools_plugin_directory($owner, $plugin_type) {
- if ($owner == 'ctools' && (!empty($plugin_type))) {
+ if ($owner == 'ctools' && !empty($plugin_type)) {
   return "plugins/" . $plugin_type;
+ }
+
+ if ($owner == 'panels' && !empty($plugin_type)) {
+  return 'plugins/' . $plugin_type;
  }
 }
 
