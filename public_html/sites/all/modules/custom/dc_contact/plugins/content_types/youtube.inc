@@ -36,16 +36,19 @@ function youtube_content_type_edit_form_submit($form, &$form_state) {
  * Render callback for the content type.
  */
 function youtube_content_type_render($subtype, $conf, $args, $context) {
+ $block = new stdClass();
+
  if (empty($conf['link'])) {
-  return "Video isn't available";
+  $block->content = "Video isn't available";
  }
- $pattern = "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#";
+ else {
+  $pattern = "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#";
 
- $idVideos = array();
- preg_match($pattern, $conf['link'], $idVideos);
+  $idVideos = array();
+  preg_match($pattern, $conf['link'], $idVideos);
 
- $block =new stdClass();
- $block->content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideos[0] . '"></iframe>';
+  $block->content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideos[0] . '"></iframe>';
+ }
 
  return $block;
 }
