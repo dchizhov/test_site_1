@@ -1,7 +1,7 @@
 <?php
 $plugin = array(
- 'title' => t('YouTube Video'),
- 'description' => t('Show YouTube video.'),
+ 'title' => t('YouTube or Vimeo Video'),
+ 'description' => t('Show YouTube or Vimeo video.'),
  'render callback' => 'youtube_content_type_render',
  'edit form' => 'youtube_content_type_edit_form',
  'category' => t('Custom panes'),
@@ -16,8 +16,8 @@ function youtube_content_type_edit_form($form, &$form_state) {
 
  $form['link'] = array(
   '#type' => 'textfield',
-  '#title' => t('Link on Youtube'),
-  '#default_value' => !empty($conf['text']) ? $conf['text'] : '',
+  '#title' => t('Link on Youtube or Vimeo'),
+  '#default_value' => !empty($conf['link']) ? $conf['link'] : '',
  );
 
  return $form;
@@ -37,16 +37,23 @@ function youtube_content_type_edit_form_submit($form, &$form_state) {
  */
 function youtube_content_type_render($subtype, $conf, $args, $context) {
  $block = new stdClass();
- $block->content = "Video isn't available";
+ $content = "Video isn't available";
 
  if (!empty($conf['link'])) {
-  $pattern = "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#";
-
+  $pattern = '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i';
   $idVideos = array();
   preg_match($pattern, $conf['link'], $idVideos);
 
-  $block->content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideos[0] . '"></iframe>';
+  if (!empty($idVideos)) {
+   $content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideos[1] . '"></iframe>';
+  }
+  else {
+   $pattern = "~https?://(?:www\.)?vimeo\.com/([0-9]{6,10})~";
+   preg_match($pattern, $conf['link'], $idVideos);
+   $content = '<iframe width="420" height="315" src="http://player.vimeo.com/video/' . $idVideos[1] . '"></iframe>';
+  }
  }
+ $block->content = $content;
 
  return $block;
 }
