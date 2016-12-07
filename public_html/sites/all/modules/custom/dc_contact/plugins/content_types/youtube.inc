@@ -37,11 +37,9 @@ function youtube_content_type_edit_form_submit($form, &$form_state) {
  */
 function youtube_content_type_render($subtype, $conf, $args, $context) {
  $block = new stdClass();
+ $block->content = "Video isn't available";
 
- if (empty($conf['link'])) {
-  $block->content = "Video isn't available";
- }
- else {
+ if (!empty($conf['link'])) {
   $pattern = "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#";
 
   $idVideos = array();
