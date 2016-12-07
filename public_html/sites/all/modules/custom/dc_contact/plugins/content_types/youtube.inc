@@ -1,6 +1,4 @@
 <?php
-define('DC_CONTACT_LENGTH_YOUTUBE_VIDEO_ID', 11);
-
 $plugin = array(
  'title' => t('YouTube Video'),
  'description' => t('Show YouTube video.'),
@@ -41,11 +39,13 @@ function youtube_content_type_render($subtype, $conf, $args, $context) {
  if (empty($conf['link'])) {
   return "Video isn't available";
  }
+ $pattern = "#(?<=v=)[a-zA-Z0-9-]+(?=&)|(?<=v\/)[^&\n]+|(?<=v=)[^&\n]+|(?<=youtu.be/)[^&\n]+#";
 
- $idVideo = substr($conf['link'], -DC_CONTACT_LENGTH_YOUTUBE_VIDEO_ID);
+ $idVideos = array();
+ preg_match($pattern, $conf['link'], $idVideos);
 
- $block = new stdClass();
- $block->content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideo . '"></iframe>';
+ $block =new stdClass();
+ $block->content = '<iframe width="420" height="315" src="https://www.youtube.com/embed/' . $idVideos[0] . '"></iframe>';
 
  return $block;
 }
