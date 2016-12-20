@@ -1,0 +1,88 @@
+<?php
+/**
+ * @file
+ * Test Batch API
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_test_batch_api_menu() {
+  $items['test_batch_api/users'] = array(
+    'title' => 'Test Batch Api',
+    'description' => 'Test Batch Api',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dc_test_batch_api_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function dc_test_batch_api_form($form, &$form_state) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Create users',
+  );
+
+  return $form;
+}
+
+/**
+ * Implementation batch_api. Read csv file and add users to DB.
+ */
+function dc_test_batch_api_form_submit($form, &$form_state) {
+  $operations = array();
+
+  $pathToCsvFile = drupal_get_path('module', 'dc_test_batch_api') . '/MOCK_DATA.csv';
+  $handle = fopen($pathToCsvFile, 'r');
+
+  $fields = array();
+  for ($row = 1; $data = fgetcsv($handle); $row++) {
+    $fields[$row]['mail'] = $data[0];
+    $fields[$row]['name'] = $data[1];
+    $fields[$row]['pass'] = $data[2];
+  }
+
+  foreach ($fields as $field) {
+    $param = array(
+      'name' => $field['name'],
+      'mail' => $field['mail'],
+      'pass' => $field['pass'],
+      'status' => 1,
+      'init' => $field['mail'],
+      'roles' => array(
+        DRUPAL_AUTHENTICATED_RID => 'authenticated user'
+      ),
+    );
+
+    $operations[] = array('user_save', array('', $param));
+  }
+
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'dc_test_batch_api_finished',
+    'title' => 'Creating users',
+    'init_message' => 'Creating users...',
+    'progress_message' => 'Initialized @current',
+    'error_message' => 'Error.',
+  );
+
+  batch_set($batch);
+}
+
+/**
+ * Show status message
+ */
+function dc_test_batch_api_finished($success) {
+  if ($success) {
+    drupal_get_messages('Success');
+  }
+  else {
+    drupal_get_messages('Errors', 'error');
+  }
+}
