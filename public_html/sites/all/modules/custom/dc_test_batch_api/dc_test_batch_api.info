@@ -1,0 +1,4 @@
+name = Test Batch API
+description = Test Batch API
+core = 7.x
+package = Custom
