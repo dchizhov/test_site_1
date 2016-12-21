@@ -153,3 +153,23 @@ function _dc_places_get_setting_block() {
  
  return render($block['content']);
 }
+
+/**
+ * Implements hook_update_n
+ */
+function dc_places_update_7100() {
+  $countries = array(
+    'First country',
+    'Second Country',
+    'Third Country',
+    'Fourth Country',
+    'Fifth Country',
+  );
+
+  foreach ($countries as $country) {
+    $term = new stdClass();
+    $term->name = $country;
+    $term->vid = DC_PLACES_COUNTRIES_VID;
+    taxonomy_term_save($term);
+  }
+}
