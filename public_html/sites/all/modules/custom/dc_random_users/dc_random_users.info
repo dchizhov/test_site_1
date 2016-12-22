@@ -1,0 +1,8 @@
+name = Random users
+description = Create 1000 Random users through Migrate API
+core = 7.x
+package = Custom
+
+dependencies[] = migrate
+
+files[] = UsersMigration.inc
