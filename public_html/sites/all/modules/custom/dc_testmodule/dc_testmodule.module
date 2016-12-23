@@ -1,0 +1,60 @@
+<?php
+/**
+ * Implements hook_menu().
+ */
+function sgp_mail_templates_menu() {
+ $items = array();
+
+ $items['admin/config/system/sgp-mail-templates'] = array(
+  'title' => 'Mail Templates',
+  'description' => 'Configuration for Mail Templates',
+  'page callback' => 'drupal_get_form',
+  'page arguments' => array('sgp_mail_templates_admin_settings'),
+  'access arguments' => array('administer site configuration'),
+  'file' => 'sgp_mail_templates.admin.inc',
+ );
+
+ return $items;
+}
+
+/**
+ * Returns with the general configuration form.
+ */
+function sgp_mail_templates_admin_settings($form, &$form_state) {
+ $form['sgp_mail_templates_footer_body'] = array(
+  '#title' => t('Footer body'),
+  '#type' => 'textarea',
+  '#default_value' => variable_get('sgp_mail_templates_footer_body', 'Cet e-mail a été envoyé par <a href="http://html.dev.sris-gp.adyax-dev.com/homepage.php" style="color: #999999; text-decoration:underline;">Sante.fr</a>,
+    Conformément à la loi “informatique et Libertés” du 6 janvier 1978, vous pouvez à tout moment demander à accéder, faire rectifier ou supprimer les informations personnelles vous concernant ou vous opposer à leur traitement en contactant Quam ob rem primum videamus, si placet, quatenus amor in amicitia progedi debeat.'),
+ );
+ $form['sgp_mail_templates_footer_links'] = array(
+  '#title' => t('Footer links'),
+  '#type' => 'textarea',
+  '#default_value' => variable_get('sgp_mail_templates_footer_links',
+   '<a href="http://html.dev.sris-gp.adyax-dev.com/homepage.php" style="color: #999999; text-decoration:none;">Confidentialité et Cookies  </a>|'
+   . '<a href="http://html.dev.sris-gp.adyax-dev.com/homepage.php" style="color: #999999; text-decoration:none;">  Contact</a>'),
+ );
+ $form['sgp_mail_welcome_email_header'] = array(
+  '#title' => t('Welcome email header'),
+  '#type' => 'textfield',
+  '#default_value' => variable_get('sgp_mail_welcome_email_header', 'Merci de confirmer votre email.'),
+ );
+
+ $form['sgp_mail_can_send_notifications_email'] = array(
+  '#title' => t('Can send notifications email'),
+  '#type' => 'checkbox',
+  '#default_value' => variable_get('sgp_mail_can_send_notifications_email', FALSE),
+ );
+ $form['sgp_mail_notifications_email_subject'] = array(
+  '#title' => t('Notifications email subject'),
+  '#type' => 'textfield',
+  '#default_value' => variable_get('sgp_mail_notifications_email_subject', 'Notifications email subject'),
+ );
+ $form['sgp_mail_notifications_email_body'] = array(
+  '#title' => t('Notifications email subject'),
+  '#type' => 'textarea',
+  '#default_value' => variable_get('sgp_mail_notifications_email_body', 'Notifications email body'),
+ );
+
+ return system_settings_form($form);
+}
