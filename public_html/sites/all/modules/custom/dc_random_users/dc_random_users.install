@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Implements hook_disable().
+ */
+
+function dc_random_users_disable() {
+  Migration::deregisterMigration('UsersMigration');
+}

@@ -1,0 +1,9 @@
+name = Migration Countries and Cities
+description = Migration Countries and Cities
+core = 7.x
+package = Custom
+
+dependencies[] = migrate
+
+files[] = CountriesMigration.inc
+files[] = CitiesMigration.inc

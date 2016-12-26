@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Support for sites creators and modules developers
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function dc_xray_form_alter(&$form, &$form_state, $form_id) {
+ $form['dc_xray_display_form_id'] = array(
+  '#type' => 'item',
+  '#title' => t('Form_ID'),
+  '#markup' => $form_id,
+  '#weight' => -100,
+ );
+}
+
+/**
+ * Implements hook_help().
+ */
+function dc_xray_help($path, $arg) {
+ if ($path = 'admin/structure') {
+  return t('This site has stuff!');
+ }
+}
+
+

@@ -1,0 +1,4 @@
+name = X-ray
+description = Show inside structure and site connections.
+core = 7.x
+package = Custom
