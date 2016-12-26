@@ -1,0 +1,10 @@
+<?php
+/**
+ * @file
+ * Implements hook_disable().
+ */
+
+function dc_migration_countries_cities_disable() {
+  Migration::deregisterMigration('Countries');
+  Migration::deregisterMigration('Cities');
+}
