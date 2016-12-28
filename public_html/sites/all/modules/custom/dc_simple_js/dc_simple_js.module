@@ -1,0 +1,82 @@
+<?php
+/**
+ * @file
+ * Test Drupal Behaviors and some ctools plugins
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dc_simple_js_menu() {
+  $items['simple/js'] = array(
+    'title' => 'Simple JS',
+    'description' => 'description Simle JS',
+    'page callback' => '_dc_simple_js_connect_js_file',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => TRUE,
+  );
+
+  $items['ajax-links/ajax'] = array(
+    'page callback' => '_dc_simple_js_call_alert',
+    'access arguments' => TRUE,
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  $items['ajax-links/ajax-modal'] = array(
+    'page callback' => '_dc_simple_js_call_modal',
+    'access arguments' => TRUE,
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'ajax_deliver',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_plugin_directory().
+ */
+function dc_simple_js_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'ctools' && !empty($plugin_type)) {
+    return "plugins/" . $plugin_type;
+  }
+}
+
+/**
+ * Connecting js file
+ */
+function _dc_simple_js_connect_js_file() {
+  if (drupal_add_js(drupal_get_path('module', 'dc_simple_js') . '/dc_simple_js.js')) {
+    return 'JS file\'s connected!';
+  }
+  return 'Js file hasn\'t connected! ';
+}
+
+/**
+ *
+ */
+function _dc_simple_js_call_alert() {
+  $commands = array();
+
+  $commands[] = ajax_command_alert('Alert AJAX link');
+
+  return array(
+    '#type' => 'ajax',
+    '#commands' => $commands,
+  );
+}
+
+function _dc_simple_js_call_modal() {
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
+  
+  $commands = array();
+
+  $commands[] = ctools_modal_command_display('Modal cTools Window!', 'Some text.');
+
+  return array(
+    '#type' => 'ajax',
+    '#commands' => $commands,
+  );
+}
