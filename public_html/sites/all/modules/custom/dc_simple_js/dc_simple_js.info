@@ -1,0 +1,8 @@
+name = Simple JS!
+description = Test Drupal Behaviors and some ctools plugins
+core = 7.x
+
+package = Custom
+
+dependencies[] = ctools
+dependencies[] = views
